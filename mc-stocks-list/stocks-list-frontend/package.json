@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "package": "cat /Users/corneliudumitru.sofi/Master_VU_UvA/Master_Thesis/dynamic-plugins/test_project/mc-stocks-list/stocks-list-frontend/custom-elements-es5-adapter.js /Users/corneliudumitru.sofi/Master_VU_UvA/Master_Thesis/dynamic-plugins/test_project/mc-stocks-list/stocks-list-frontend/dist/stocks-list-frontend/runtime.js /Users/corneliudumitru.sofi/Master_VU_UvA/Master_Thesis/dynamic-plugins/test_project/mc-stocks-list/stocks-list-frontend/dist/stocks-list-frontend/polyfills.js /Users/corneliudumitru.sofi/Master_VU_UvA/Master_Thesis/dynamic-plugins/test_project/mc-stocks-list/stocks-list-frontend/dist/stocks-list-frontend/main.js > stocks-list.js"
+    "package": "cat /vagrant/micro-components-demo-app/mc-stocks-list/stocks-list-frontend/custom-elements-es5-adapter.js /vagrant/micro-components-demo-app/mc-stocks-list/stocks-list-frontend/dist/stocks-list-frontend/runtime.js /vagrant/micro-components-demo-app/mc-stocks-list/stocks-list-frontend/dist/stocks-list-frontend/polyfills.js /vagrant/micro-components-demo-app/mc-stocks-list/stocks-list-frontend/dist/stocks-list-frontend/main.js > stocks-list.js"
   },
   "private": true,
   "dependencies": {
