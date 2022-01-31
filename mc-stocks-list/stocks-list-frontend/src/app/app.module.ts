@@ -4,6 +4,7 @@ import { createCustomElement } from '@angular/elements';
 import { AppComponent } from './app.component';
 import { MainComponent } from './main/main.component';
 import { MatListModule } from '@angular/material/list';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,8 @@ import { MatListModule } from '@angular/material/list';
   ],
   imports: [
     BrowserModule,
-    MatListModule
+    MatListModule,
+    HttpClientModule
   ],
   entryComponents: [MainComponent],
   providers: [],

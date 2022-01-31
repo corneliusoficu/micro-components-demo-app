@@ -1,4 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { StocksService } from '../stocks.service';
+import { UserStock } from '../models/UserStock';
 
 @Component({
   selector: 'app-main',
@@ -7,35 +9,30 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
   encapsulation: ViewEncapsulation.None
 })
 export class MainComponent implements OnInit {
-  portfolioStocks = [
-    {
-      name: 'Microsoft',
-      exchange: 'Nasdaq',
-      shares: '245.9',
-      totalValue: '81,021'
-    },
-    {
-      name: 'AirBnb',
-      exchange: 'Nasdaq',
-      shares: '81',
-      totalValue: '14,501'
-    },
-    {
-      name: 'Alibaba',
-      exchange: 'NYSE',
-      shares: '1055',
-      totalValue: '7,000'
-    },
-    {
-      name: 'Exxon',
-      exchange: 'NYSE',
-      shares: '67',
-      totalValue: '32,000'
-    }
-  ]
-  constructor() { }
+  portfolioStocks: UserStock[] = []
+  constructor(private stocksService: StocksService) { }
 
   ngOnInit(): void {
+    var currentUser = localStorage.getItem('currentUser')
+
+    if(!currentUser) {
+      console.log("No user in local storage!")
+      return;
+    }
+
+    var currentUserJson = JSON.parse(currentUser);
+
+    this.stocksService.getUserStocks(currentUserJson["token"]).subscribe(
+      (response)=>{
+        this.portfolioStocks = response
+      },
+      (error) => {                              //error() callback
+        console.error('Request failed with error')
+        console.log(error);
+      },
+      () => {                                   //complete() callback
+        console.error('Request completed')      //This is actually not needed 
+      })
   }
 
 }

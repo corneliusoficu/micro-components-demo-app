@@ -5,3 +5,5 @@ stocks-graph.js
 .settings/
 .classpath
 .project
+.idea/
+*.iml
