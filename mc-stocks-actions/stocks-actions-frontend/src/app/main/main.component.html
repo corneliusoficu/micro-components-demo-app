@@ -1,3 +1,32 @@
-<div>
-    <p>stocks-actions frontend custom element rendered successfully</p>
+<div id="stock-actions-div">
+    <p>
+        <mat-form-field class="stocks-actions-form" appearance="fill">
+            <mat-label>Stock Ticker</mat-label>
+            <input matInput type="text" [(ngModel)]="ticker">
+            <button *ngIf="ticker" matSuffix mat-icon-button aria-label="Clear" (click)="ticker=''">
+            <mat-icon>close</mat-icon>
+            </button>
+        </mat-form-field>
+    </p>
+    <div class="shares-slider-container" [class]="vertical ? 'example-label-vertical' : 'example-label-horizontal'">
+        <label id="example-name-label" class="example-name-label">Nr of shares:</label>
+        <label class="example-value-label"><b>{{value}} shares</b></label>
+    </div>
+    <mat-slider
+        class="example-margin"
+        [disabled]="disabled"
+        [invert]="invert"
+        [max]="max"
+        [min]="min"
+        [step]="step"
+        [thumbLabel]="thumbLabel"
+        [tickInterval]="getSliderTickInterval()"
+        [(ngModel)]="value"
+        [vertical]="vertical"
+        aria-labelledby="example-name-label">
+    </mat-slider>
+    <div class="button-actions">
+        <button style="margin-right: 15px;" mat-raised-button color="primary">BUY</button>
+        <button mat-raised-button color="warn">SELL</button>
+    </div>
 </div>

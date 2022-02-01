@@ -1,0 +1,21 @@
+#stock-actions-div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.stocks-actions-form {
+    width: 100%;
+}
+
+.shares-slider-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.button-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}

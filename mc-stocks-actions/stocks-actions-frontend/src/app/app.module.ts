@@ -3,6 +3,15 @@ import { Injector, NgModule } from '@angular/core';
 import { createCustomElement } from '@angular/elements';
 import { AppComponent } from './app.component';
 import { MainComponent } from './main/main.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatButtonModule } from '@angular/material/button';
+
+
 
 @NgModule({
   declarations: [
@@ -10,7 +19,14 @@ import { MainComponent } from './main/main.component';
      MainComponent
   ],
   imports: [
+    BrowserAnimationsModule,
+    MatFormFieldModule,
     BrowserModule,
+    MatInputModule,
+    FormsModule,
+    MatIconModule,
+    MatSliderModule,
+    MatButtonModule
   ],
   entryComponents: [MainComponent],
   providers: [],
