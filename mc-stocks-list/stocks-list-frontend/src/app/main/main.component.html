@@ -1,6 +1,6 @@
 <h3 id="portfolio-stocks-header">Your Portfolio Stocks</h3>
 <mat-selection-list #selectedStocks [multiple]="false">
-    <mat-list-option *ngFor="let stock of portfolioStocks">
+    <mat-list-option *ngFor="let stock of portfolioStocks" (click)="onListitemClick(stock)">
         <div class="portfolio-stocks-list-item" mat-line>
             <div>
                 {{stock.name}}

@@ -30,11 +30,15 @@ export class MainComponent implements OnInit {
       },
       (error) => {                              //error() callback
         console.error('Request failed with error')
-        console.log(error);
-      },
-      () => {                                   //complete() callback
-        console.error('Request completed')      //This is actually not needed 
+        console.error(error);
       })
+  }
+
+  onListitemClick(stockItem) {
+    console.log("List Item clicked!")
+    console.log(stockItem);
+    const event = new CustomEvent('stocks_list_item_clicked', {detail: stockItem});
+    dispatchEvent(event);
   }
 
 }
