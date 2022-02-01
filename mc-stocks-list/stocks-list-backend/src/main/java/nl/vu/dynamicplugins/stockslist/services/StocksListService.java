@@ -1,6 +1,7 @@
 package nl.vu.dynamicplugins.stockslist.services;
 
 
+import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import nl.vu.dynamicplugins.core.base.services.BaseEndpoint;
 import nl.vu.dynamicplugins.stockslist.SecurityHandler;
 import nl.vu.dynamicplugins.stockslist.StocksRetriever;
@@ -12,7 +13,9 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component(service = StocksListService.class, immediate = true, property = //
         { //
@@ -74,8 +77,6 @@ public class StocksListService extends BaseEndpoint {
         List<UserStock> userStocks = stocksRetriever.storeUserStocks(email, stocksToBeSaved);
         return Response.ok().entity(userStocks).build();
     }
-
-
 
     @Override
     public Response health() {

@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  stocksListBaseUrl: "http://127.0.0.1:8181/cxf/stocks-list"
+  stocksListBaseUrl: "http://127.0.0.1:4202/cxf/stocks-list"
 };
 
 /*

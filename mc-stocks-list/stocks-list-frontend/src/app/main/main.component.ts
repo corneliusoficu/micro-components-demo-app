@@ -10,6 +10,7 @@ import { UserStock } from '../models/UserStock';
 })
 export class MainComponent implements OnInit {
   portfolioStocks: UserStock[] = []
+  totalOwnedValue = 0;
   constructor(private stocksService: StocksService) { }
 
   ngOnInit(): void {
@@ -25,6 +26,7 @@ export class MainComponent implements OnInit {
     this.stocksService.getUserStocks(currentUserJson["token"]).subscribe(
       (response)=>{
         this.portfolioStocks = response
+        this.totalOwnedValue = this.portfolioStocks.map(stock => stock.shareValue * stock.shares).reduce((previousValue, currentValue) => previousValue + currentValue, 0)
       },
       (error) => {                              //error() callback
         console.error('Request failed with error')
