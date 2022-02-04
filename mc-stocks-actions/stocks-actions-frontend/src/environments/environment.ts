@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  stockActionsBackend: 'http://127.0.0.1:4201/cxf/stocks-actions'
+  stockActionsBackend: 'http://localhost:4201/cxf/stocks-actions'
 };
 
 /*

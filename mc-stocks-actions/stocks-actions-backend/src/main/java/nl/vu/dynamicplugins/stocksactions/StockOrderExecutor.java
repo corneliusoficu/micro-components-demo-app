@@ -36,7 +36,7 @@ public class StockOrderExecutor  {
                 throw new IllegalStateException(String.format("Unkown stock order type: %s", stockOrder.getOrderType().toUpperCase()));
         }
         
-        eventAdmin.postEvent(event);
+        eventAdmin.sendEvent(event);
         LOGGER.info("Sending a stock order event of type {} using Event Admin to topic: {}", stockOrder.getOrderType().toUpperCase(), event.getTopic());
     }
 }

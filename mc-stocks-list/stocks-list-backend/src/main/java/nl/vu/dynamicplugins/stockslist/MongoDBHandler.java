@@ -4,8 +4,12 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.FindOneAndUpdateOptions;
+
 import nl.vu.dynamicplugins.stockslist.model.UserStock;
 import org.bson.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -13,6 +17,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MongoDBHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MongoDBHandler.class);
+
     private static final String HOST = "localhost";
     private static final int PORT = 27017;
 
@@ -49,18 +55,22 @@ public class MongoDBHandler {
     public void storeUserStocks(String email, List<UserStock> newUserStocks) {
         MongoCollection<Document> stocksCollection = database.getCollection(SHARES_COLLECTION);
 
-        List<Document> documents = newUserStocks.stream()
-                .map(s -> {
-                    Document document = new Document();
-                    document.put("email", email);
-                    document.put("ticker", s.getTicker());
-                    document.put("name", s.getName() != null ? s.getName() : s.getTicker());
-                    document.put("noShares", s.getShares());
-                    document.put("market", s.getMarket() != null ? s.getMarket() : "NASDAQ");
-                    return document;
-                })
-                .collect(Collectors.toList());
+        for(UserStock newUserStock: newUserStocks) {
+            Document updatedDocument = stocksCollection.findOneAndUpdate(
+                new Document("ticker", newUserStock.getTicker().toLowerCase()), 
+                new Document("$inc", new Document("noShares", newUserStock.getShares())));
 
-        stocksCollection.insertMany(documents);
+            if(updatedDocument != null) {
+                continue;
+            }
+
+            Document document = new Document();
+            document.put("ticker", newUserStock.getTicker().toLowerCase());
+            document.put("email", email);
+            document.put("name", newUserStock.getName() != null ? newUserStock.getName() : newUserStock.getTicker());
+            document.put("noShares", newUserStock.getShares());
+            document.put("market", newUserStock.getMarket() != null ? newUserStock.getMarket() : "NASDAQ");
+            stocksCollection.insertOne(document);
+        }
     }
 }

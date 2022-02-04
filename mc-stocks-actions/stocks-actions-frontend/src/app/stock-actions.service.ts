@@ -9,8 +9,8 @@ import { StockOrder } from './model/StockOrder';
 export class StockActionsService {
   constructor(private http: HttpClient) { }
 
-  executeStockOrder(stockOrder: StockOrder) {
-    return this.http.post(`${environment.stockActionsBackend}/executeStockOrder`, stockOrder);
+  executeStockOrder(bearerToken, stockOrder: StockOrder) {
+    return this.http.post(`${environment.stockActionsBackend}/executeStockOrder`, stockOrder, {headers: {"Authorization": `Bearer ${bearerToken}`}});
   }
 
   

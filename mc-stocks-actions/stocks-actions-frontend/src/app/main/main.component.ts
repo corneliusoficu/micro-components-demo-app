@@ -62,7 +62,16 @@ export class MainComponent implements OnInit {
     stockOrder.shares = this.value;
     stockOrder.ticker = this.ticker;
 
-    this.stockActionsService.executeStockOrder(stockOrder).subscribe(
+    var currentUser = localStorage.getItem('currentUser')
+
+    if(!currentUser) {
+      console.log("No user in local storage!")
+      return;
+    }
+
+    var currentUserJson = JSON.parse(currentUser);
+
+    this.stockActionsService.executeStockOrder(currentUserJson["token"], stockOrder).subscribe(
       (res) => {
         alert("Executed")
       },
