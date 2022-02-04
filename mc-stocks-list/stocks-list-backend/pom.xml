@@ -78,6 +78,12 @@
             <artifactId>mongo-java-driver</artifactId>
             <version>3.12.10</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.eventadmin</artifactId>
+            <version>1.6.2</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -93,6 +99,7 @@
                         <Bundle-Activator>nl.vu.dynamicplugins.stockslist.Activator</Bundle-Activator>
                         <!-- <_include>META-INF/MANIFEST.MF</_include> -->
                         <Import-Package>
+                            org.osgi.service.event.*,
                             org.bson.*,
                             com.mongodb.*,
                             com.fasterxml.jackson.annotation.*,

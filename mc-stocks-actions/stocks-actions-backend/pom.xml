@@ -68,6 +68,17 @@
             <artifactId>cxf-rt-rs-client</artifactId>
             <version>3.0.4</version>
         </dependency>
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.18.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.eventadmin</artifactId>
+            <version>1.6.2</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -79,9 +90,14 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
+                        <Embed-Dependency>java-jwt;inline=true</Embed-Dependency>
                         <Bundle-Activator>nl.vu.dynamicplugins.stocksactions.Activator</Bundle-Activator>
                         <!-- <_include>META-INF/MANIFEST.MF</_include> -->
                         <Import-Package>
+                            org.osgi.service.event.*,
+                            com.fasterxml.jackson.annotation.*,
+                            com.fasterxml.jackson.databind.*,
+                            com.fasterxml.jackson.core.*,
                             org.osgi.framework.*,
                             org.slf4j.*,
                             org.apache.cxf.dosgi.common.api,

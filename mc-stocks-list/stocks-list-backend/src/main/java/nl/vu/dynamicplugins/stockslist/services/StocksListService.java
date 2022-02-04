@@ -1,37 +1,40 @@
 package nl.vu.dynamicplugins.stockslist.services;
 
 
-import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import nl.vu.dynamicplugins.core.base.services.BaseEndpoint;
 import nl.vu.dynamicplugins.stockslist.SecurityHandler;
-import nl.vu.dynamicplugins.stockslist.StocksRetriever;
+import nl.vu.dynamicplugins.stockslist.StocksListOperationsHandler;
 import nl.vu.dynamicplugins.stockslist.model.UserStock;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.osgi.service.event.EventConstants;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.io.InputStream;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Component(service = StocksListService.class, immediate = true, property = //
         { //
                 "service.exported.interfaces=*", //
                 "service.exported.configs=org.apache.cxf.rs", //
-                "org.apache.cxf.rs.address=/stocks-list", "cxf.bus.prop.skip.default.json.provider.registration=true" } //
+                "org.apache.cxf.rs.address=/stocks-list", 
+                "cxf.bus.prop.skip.default.json.provider.registration=true",
+                EventConstants.EVENT_TOPIC + "=" + "nl/vu/dynamicplugins/stocksactions/StockOrderExecutor/BUY"
+        } //
 )
-public class StocksListService extends BaseEndpoint {
+public class StocksListService extends BaseEndpoint implements EventHandler {
     private final static Logger LOGGER = LoggerFactory.getLogger(StocksListService.class);
 
     private SecurityHandler securityHandler;
-    private StocksRetriever stocksRetriever;
+    private StocksListOperationsHandler stocksListOperationsHandler;
 
     public StocksListService() {
         securityHandler = new SecurityHandler();
-        stocksRetriever = new StocksRetriever();
+        stocksListOperationsHandler = new StocksListOperationsHandler();
     }
 
     @GET
@@ -57,7 +60,7 @@ public class StocksListService extends BaseEndpoint {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
 
-        List<UserStock> userStocks = stocksRetriever.getUserOwnedStocks(email);
+        List<UserStock> userStocks = stocksListOperationsHandler.getUserOwnedStocks(email);
         return Response.ok().entity(userStocks).build();
     }
 
@@ -74,7 +77,7 @@ public class StocksListService extends BaseEndpoint {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
 
-        List<UserStock> userStocks = stocksRetriever.storeUserStocks(email, stocksToBeSaved);
+        List<UserStock> userStocks = stocksListOperationsHandler.storeUserStocks(email, stocksToBeSaved);
         return Response.ok().entity(userStocks).build();
     }
 
@@ -82,5 +85,13 @@ public class StocksListService extends BaseEndpoint {
     public Response health() {
         LOGGER.info("Requesting health for stocks-list");
         return super.health();
+    }
+
+    @Override
+    public void handleEvent(Event event) {
+        String email = (String) event.getProperty("email");
+        String ticker = (String) event.getProperty("ticker");
+        String shares = (String) event.getProperty("shares");
+        LOGGER.info("Received a stock order event from event admin, email: {}, ticker: {}, shares: {}", email, ticker, shares);
     }
 }

@@ -54,9 +54,9 @@ public class MongoDBHandler {
                     Document document = new Document();
                     document.put("email", email);
                     document.put("ticker", s.getTicker());
-                    document.put("name", s.getName());
+                    document.put("name", s.getName() != null ? s.getName() : s.getTicker());
                     document.put("noShares", s.getShares());
-                    document.put("market", s.getMarket());
+                    document.put("market", s.getMarket() != null ? s.getMarket() : "NASDAQ");
                     return document;
                 })
                 .collect(Collectors.toList());

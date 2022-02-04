@@ -1,4 +1,26 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Inject } from '@angular/core';
+import { StockActionsService } from '../stock-actions.service';
+import { StockOrder } from '../model/StockOrder';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+export class DialogData {
+  title: string;
+  message: string;
+}
+
+@Component({
+  selector: 'stocks-dialog',
+  templateUrl: './stock-actions-dialog.html'
+})
+export class StocksDialog {
+  constructor(public dialogRef: MatDialogRef<StocksDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+
+    onNoClick(): void {
+      this.dialogRef.close();
+    }
+
+}
 
 @Component({
   selector: 'app-main',
@@ -21,6 +43,11 @@ export class MainComponent implements OnInit {
   vertical = false;
   tickInterval = 1;
 
+  constructor(private stockActionsService: StockActionsService, public dialog: MatDialog) { }
+
+  ngOnInit(): void {
+  }
+
   getSliderTickInterval(): number | 'auto' {
     if (this.showTicks) {
       return this.autoTicks ? 'auto' : this.tickInterval;
@@ -29,9 +56,27 @@ export class MainComponent implements OnInit {
     return 0;
   }
 
-  constructor() { }
+  onSharesAction(sharesAction) {
+    var stockOrder: StockOrder = new StockOrder();
+    stockOrder.orderType = sharesAction;
+    stockOrder.shares = this.value;
+    stockOrder.ticker = this.ticker;
 
-  ngOnInit(): void {
+    this.stockActionsService.executeStockOrder(stockOrder).subscribe(
+      (res) => {
+        alert("Executed")
+      },
+      (error) => {
+        console.error("Error occured!", error.message)
+        this.openDialog("Error occured!", error.message);
+      });
+  }
+
+  openDialog(title, message) {
+    this.dialog.open(StocksDialog, {data: {
+      title: title,
+      message: message
+    }});
   }
 
 }
