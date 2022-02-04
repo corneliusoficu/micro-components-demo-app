@@ -14,12 +14,19 @@ export class DialogData {
 })
 export class StocksDialog {
   constructor(public dialogRef: MatDialogRef<StocksDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+    @Inject(MAT_DIALOG_DATA) public data: DialogData) {
+      dialogRef.disableClose = true; 
+    }
 
     onNoClick(): void {
       this.dialogRef.close();
     }
 
+    onDialogClose() {
+      this.dialogRef.close();
+      const event = new CustomEvent('stocks_list_refresh_list');
+      dispatchEvent(event);
+    }
 }
 
 @Component({
@@ -73,7 +80,7 @@ export class MainComponent implements OnInit {
 
     this.stockActionsService.executeStockOrder(currentUserJson["token"], stockOrder).subscribe(
       (res) => {
-        alert("Executed")
+        this.openDialog("Success!", "Stock operation was executed!");
       },
       (error) => {
         console.error("Error occured!", error.message)

@@ -1,6 +1,8 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, HostListener, OnInit, ViewEncapsulation } from '@angular/core';
 import { StocksService } from '../stocks.service';
 import { UserStock } from '../models/UserStock';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-main',
@@ -11,9 +13,10 @@ import { UserStock } from '../models/UserStock';
 export class MainComponent implements OnInit {
   portfolioStocks: UserStock[] = []
   totalOwnedValue = 0;
+  reloader$ = new Subject();
   constructor(private stocksService: StocksService) { }
 
-  ngOnInit(): void {
+  getUserStocks() {
     var currentUser = localStorage.getItem('currentUser')
 
     if(!currentUser) {
@@ -23,15 +26,21 @@ export class MainComponent implements OnInit {
 
     var currentUserJson = JSON.parse(currentUser);
 
-    this.stocksService.getUserStocks(currentUserJson["token"]).subscribe(
-      (response)=>{
-        this.portfolioStocks = response
-        this.totalOwnedValue = this.portfolioStocks.map(stock => stock.shareValue * stock.shares).reduce((previousValue, currentValue) => previousValue + currentValue, 0)
-      },
-      (error) => {                              //error() callback
-        console.error('Request failed with error')
-        console.error(error);
-      })
+    this.stocksService.getUserStocks(currentUserJson["token"])
+      .subscribe(
+        (response)=>{
+          console.log("Got Response from backend")
+          this.portfolioStocks = response
+          this.totalOwnedValue = this.portfolioStocks.map(stock => stock.shareValue * stock.shares).reduce((previousValue, currentValue) => previousValue + currentValue, 0)
+        },
+        (error) => {                              //error() callback
+          console.error('Request failed with error')
+          console.error(error);
+        });
+  }
+
+  ngOnInit(): void {
+    this.getUserStocks();
   }
 
   onListitemClick(stockItem) {
@@ -39,6 +48,14 @@ export class MainComponent implements OnInit {
     console.log(stockItem);
     const event = new CustomEvent('stocks_list_item_clicked', {detail: stockItem});
     dispatchEvent(event);
+  }
+
+  @HostListener('window:stocks_list_refresh_list', ['$event'])
+  onListItemClicked(event: any) {
+    console.log("Refresing list of stocks for user")
+    this.portfolioStocks = [];
+    this.totalOwnedValue = 0;
+    this.getUserStocks();
   }
 
 }
